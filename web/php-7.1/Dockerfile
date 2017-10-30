@@ -1,0 +1,150 @@
+FROM phusion/baseimage
+
+LABEL maintainer="Konstantin Myakshin <kod-dp@yandex.ru>"
+
+RUN rm -f /etc/service/sshd/down
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Install VCSs
+RUN apt-get update && apt-get install -y \
+  bzr \
+  cvs \
+  git \
+  mercurial \
+  subversion \
+  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
+
+# Install NodeJS
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - && apt-get install -y nodejs build-essential \
+ && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
+
+# Install Yarn
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+ && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+ && apt-get update && apt-get install -y yarn \
+ && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
+
+# Install Webpack
+RUN npm install -g webpack
+
+# Install Bower
+RUN npm install -g bower
+
+# Install common software
+RUN apt-get update && apt-get install -y \
+    redis-tools \
+    mysql-client \
+    curl \
+    wget \
+    mc \
+    htop \
+    screen \
+    iputils-ping \
+    sudo \
+    vim \
+ && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
+
+ENV PHP_VERSION 7.1
+ENV PHP_INI_DIR /etc/php/$PHP_VERSION
+
+# Install PHP and extensions
+RUN add-apt-repository ppa:ondrej/php \
+ && apt-get update && apt-get install -y \
+    libapache2-mod-php$PHP_VERSION \
+    php$PHP_VERSION \
+    php$PHP_VERSION-cli \
+    php$PHP_VERSION-common \
+    php$PHP_VERSION-dev \
+    php$PHP_VERSION-gd \
+    php$PHP_VERSION-imagick \
+    php$PHP_VERSION-mysql \
+    php$PHP_VERSION-pgsql \
+    php$PHP_VERSION-mcrypt \
+    php$PHP_VERSION-curl \
+    php$PHP_VERSION-intl \
+    php$PHP_VERSION-xsl \
+    php$PHP_VERSION-mbstring \
+    php$PHP_VERSION-zip \
+    php$PHP_VERSION-bcmath \
+    php$PHP_VERSION-iconv \
+    php$PHP_VERSION-imap \
+    php$PHP_VERSION-apcu \
+    php$PHP_VERSION-soap \
+    php$PHP_VERSION-redis \
+    php$PHP_VERSION-ldap \
+    php$PHP_VERSION-mailparse \
+    php$PHP_VERSION-xdebug \
+ && a2enmod ssl rewrite headers include proxy alias \
+ && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
+
+# Install Blackfire
+RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
+ && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/linux/amd64/$version \
+ && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp \
+ && mv /tmp/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
+# && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8707\n" > $PHP_INI_DIR/apache2/conf.d/blackfire.ini \
+ && mkdir -p /tmp/blackfire \
+ && curl -A "Docker" -L https://blackfire.io/api/v1/releases/client/linux_static/amd64 | tar zxp -C /tmp/blackfire \
+ && mv /tmp/blackfire/blackfire /usr/bin/blackfire \
+ && rm -Rf /tmp/*
+
+# Install PHPCS
+RUN curl -sL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar -o /usr/local/bin/phpcs && chmod +x /usr/local/bin/phpcs
+RUN curl -sL https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar -o /usr/local/bin/phpcbf && chmod +x /usr/local/bin/phpcbf
+
+# Install Composer
+ENV COMPOSER_VERSION 1.5.2
+RUN curl -sL https://getcomposer.org/download/$COMPOSER_VERSION/composer.phar -o /usr/local/bin/composer && chmod +x /usr/local/bin/composer
+
+# Install PHPUnit
+ENV PHPUNIT_VERSION 6.3
+RUN curl -sL https://phar.phpunit.de/phpunit-$PHPUNIT_VERSION.phar -o /usr/local/bin/phpunit && chmod +x /usr/local/bin/phpunit
+
+COPY bin/01_start_sshd.sh /etc/my_init.d/01_start_sshd.sh
+RUN chmod +x /etc/my_init.d/01_start_sshd.sh
+
+ENV CONTAINER_USER dev
+ENV CONTAINER_GROUP $CONTAINER_USER
+ENV HOME /home/$CONTAINER_USER
+
+RUN groupadd $CONTAINER_GROUP -g 1000 \
+ && useradd -u 1000 --home $HOME --create-home --shell /bin/bash -g $CONTAINER_GROUP $CONTAINER_USER \
+#    echo "abc:x:${uid}:${gid}:Abc,,,:/home/abc:/bin/bash" >> /etc/passwd && \
+#    echo "abc:x:${uid}:" >> /etc/group && \
+ && echo "$CONTAINER_USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$CONTAINER_USER \
+ && chmod 0440 /etc/sudoers.d/$CONTAINER_USER
+
+ENV APACHE_RUN_USER $CONTAINER_USER
+ENV APACHE_RUN_GROUP $CONTAINER_GROUP
+
+RUN mkdir -p /var/www/html && chown $CONTAINER_USER:$CONTAINER_GROUP -R /var/www/html
+
+#USER $CONTAINER_USER
+
+ENV PASSWORD ""
+ENV COMPOSER_AUTH ""
+
+ENV PHP_CONFIG ""
+ENV PHP_CONFIG_CLI ""
+ENV PHP_CONFIG_WEB ""
+
+#TODO: cron
+#TODO: supervisord
+#TODO: composer volume for ~/.composer?
+
+#TODO: add sendmail stub
+#TODO: blackfire configure
+#TODO: multiple databases
+
+#VOLUME ["/var/www/html", "/var/log/apache2"]
+VOLUME ["/var/www", "/var/log/apache2"]
+WORKDIR /var/www/html
+
+COPY bin/docker-entrypoint.sh /usr/local/bin/
+COPY bin/run-apache.sh /usr/local/bin/
+
+EXPOSE 80
+#ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["/sbin/my_init", "--", "setuser", "dev", "docker-entrypoint.sh"]
+
+CMD ["run-apache.sh"]
