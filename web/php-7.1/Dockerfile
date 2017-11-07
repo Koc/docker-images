@@ -40,8 +40,8 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
 # Install Bower
-#RUN npm install -g bower
-RUN yarn global add bower
+RUN npm install -g bower 2 > /dev/null
+#RUN yarn global add bower
 
 ENV PHP_VERSION 7.1
 ENV PHP_INI_DIR /etc/php/$PHP_VERSION
