@@ -50,16 +50,16 @@ for e in "${!APACHE_@}"; do
 done
 
 if [ -n "$PHP_CONFIG" ]; then
-	echo "$PHP_CONFIG" | sudo tee $PHP_INI_DIR/apache2/conf.d/90-conf.ini > /dev/null
-	echo "$PHP_CONFIG" | sudo tee $PHP_INI_DIR/cli/conf.d/90-conf.ini > /dev/null
+	echo "$PHP_CONFIG" | sudo tee $PHP_INI_DIR/apache2/conf.d/90-config.ini > /dev/null
+	echo "$PHP_CONFIG" | sudo tee $PHP_INI_DIR/cli/conf.d/90-config.ini > /dev/null
 fi
 
 if [ -n "$PHP_CONFIG_WEB" ]; then
-	echo "$PHP_CONFIG_WEB" | sudo tee $PHP_INI_DIR/apache2/conf.d/95-conf.ini > /dev/null
+	echo "$PHP_CONFIG_WEB" | sudo tee $PHP_INI_DIR/apache2/conf.d/95-config.ini > /dev/null
 fi
 
 if [ -n "$PHP_CONFIG_CLI" ]; then
-	echo "$PHP_CONFIG_CLI" | sudo tee $PHP_INI_DIR/cli/conf.d/95-conf.ini > /dev/null
+	echo "$PHP_CONFIG_CLI" | sudo tee $PHP_INI_DIR/cli/conf.d/95-config.ini > /dev/null
 fi
 
 if [ -n "$PASSWORD" ]; then

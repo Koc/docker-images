@@ -14,6 +14,21 @@ RUN apt-get update && apt-get install -y \
   subversion \
   && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
+# Install common software
+RUN apt-get update && apt-get install -y \
+    redis-tools \
+    mysql-client \
+    postgresql-client \
+    curl \
+    wget \
+    mc \
+    htop \
+    screen \
+    iputils-ping \
+    sudo \
+    vim \
+ && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
+
 # Install NodeJS
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - && apt-get install -y nodejs build-essential \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
@@ -24,25 +39,8 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
  && apt-get update && apt-get install -y yarn \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
-# Install Webpack
-RUN npm install -g webpack
-
 # Install Bower
 RUN npm install -g bower
-
-# Install common software
-RUN apt-get update && apt-get install -y \
-    redis-tools \
-    mysql-client \
-    curl \
-    wget \
-    mc \
-    htop \
-    screen \
-    iputils-ping \
-    sudo \
-    vim \
- && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
 ENV PHP_VERSION 7.0
 ENV PHP_INI_DIR /etc/php/$PHP_VERSION
@@ -97,10 +95,10 @@ ENV COMPOSER_VERSION 1.5.2
 RUN curl -sL https://getcomposer.org/download/$COMPOSER_VERSION/composer.phar -o /usr/local/bin/composer && chmod +x /usr/local/bin/composer
 
 # Install PHPUnit
-ENV PHPUNIT_VERSION 6.3
+ENV PHPUNIT_VERSION 6.4
 RUN curl -sL https://phar.phpunit.de/phpunit-$PHPUNIT_VERSION.phar -o /usr/local/bin/phpunit && chmod +x /usr/local/bin/phpunit
 
-COPY bin/01_start_sshd.sh /etc/my_init.d/01_start_sshd.sh
+COPY etc/my_init.d/01_start_sshd.sh /etc/my_init.d/01_start_sshd.sh
 RUN chmod +x /etc/my_init.d/01_start_sshd.sh
 
 ENV CONTAINER_USER dev
@@ -128,23 +126,16 @@ ENV PHP_CONFIG ""
 ENV PHP_CONFIG_CLI ""
 ENV PHP_CONFIG_WEB ""
 
-#TODO: cron
-#TODO: supervisord
-#TODO: composer volume for ~/.composer?
+COPY etc/php/* /etc/php/$PHP_VERSION/apache2/conf.d/
+COPY etc/php/* /etc/php/$PHP_VERSION/cli/conf.d/
 
-#TODO: add sendmail stub
-#TODO: blackfire configure
-#TODO: multiple databases
+COPY usr/local/bin/* /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh /usr/local/bin/run-apache.sh
 
-#VOLUME ["/var/www/html", "/var/log/apache2"]
 VOLUME ["/var/www", "/var/log/apache2"]
 WORKDIR /var/www/html
 
-COPY bin/docker-entrypoint.sh /usr/local/bin/
-COPY bin/run-apache.sh /usr/local/bin/
-
 EXPOSE 80
-#ENTRYPOINT ["docker-entrypoint.sh"]
-ENTRYPOINT ["/sbin/my_init", "--", "setuser", "dev", "docker-entrypoint.sh"]
 
+ENTRYPOINT ["/sbin/my_init", "--", "setuser", "dev", "/usr/local/bin/docker-entrypoint.sh"]
 CMD ["run-apache.sh"]
