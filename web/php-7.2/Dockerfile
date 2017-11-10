@@ -6,7 +6,7 @@ RUN rm -f /etc/service/sshd/down
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Install VCSs
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
   bzr \
   cvs \
   git \
@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
   && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
 # Install common software
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     redis-tools \
     mysql-client \
     postgresql-client \
@@ -30,25 +30,21 @@ RUN apt-get update && apt-get install -y \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
 # Install NodeJS
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - && apt-get install -y nodejs build-essential \
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends nodejs build-essential \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
 # Install Yarn
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
  && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
- && apt-get update && apt-get install -y yarn \
+ && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends yarn \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
-
-# Install Bower
-RUN npm install -g bower 2 > /dev/null
-#RUN yarn global add bower
 
 ENV PHP_VERSION 7.2
 ENV PHP_INI_DIR /etc/php/$PHP_VERSION
 
 # Install PHP and extensions
 RUN add-apt-repository ppa:ondrej/php \
- && apt-get update && apt-get install -y \
+ && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     libapache2-mod-php$PHP_VERSION \
     php$PHP_VERSION \
     php$PHP_VERSION-cli \
@@ -119,6 +115,10 @@ ENV APACHE_RUN_GROUP $CONTAINER_GROUP
 RUN mkdir -p /var/www/html && chown $CONTAINER_USER:$CONTAINER_GROUP -R /var/www/html
 
 #USER $CONTAINER_USER
+
+# Install Bower
+RUN npm install -g bower
+#RUN yarn global add bower
 
 ENV PASSWORD ""
 ENV COMPOSER_AUTH ""
