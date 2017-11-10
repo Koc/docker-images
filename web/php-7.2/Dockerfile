@@ -45,6 +45,8 @@ ENV PHP_INI_DIR /etc/php/$PHP_VERSION
 # Install PHP and extensions
 RUN add-apt-repository ppa:ondrej/php \
  && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    apache2 \
+    apache2-utils \
     libapache2-mod-php$PHP_VERSION \
     php$PHP_VERSION \
     php$PHP_VERSION-cli \
@@ -54,7 +56,6 @@ RUN add-apt-repository ppa:ondrej/php \
     php$PHP_VERSION-imagick \
     php$PHP_VERSION-mysql \
     php$PHP_VERSION-pgsql \
-    php$PHP_VERSION-mcrypt \
     php$PHP_VERSION-curl \
     php$PHP_VERSION-intl \
     php$PHP_VERSION-xsl \
@@ -68,7 +69,7 @@ RUN add-apt-repository ppa:ondrej/php \
     php$PHP_VERSION-redis \
     php$PHP_VERSION-ldap \
     php$PHP_VERSION-mailparse \
-    php$PHP_VERSION-xdebug \
+    php-xdebug \
  && a2enmod ssl rewrite headers include proxy alias \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 

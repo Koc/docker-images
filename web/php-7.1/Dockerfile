@@ -45,6 +45,8 @@ ENV PHP_INI_DIR /etc/php/$PHP_VERSION
 # Install PHP and extensions
 RUN add-apt-repository ppa:ondrej/php \
  && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    apache2 \
+    apache2-utils \
     libapache2-mod-php$PHP_VERSION \
     php$PHP_VERSION \
     php$PHP_VERSION-cli \
