@@ -94,7 +94,6 @@ echo $(phpcs --version)
 echo 'Node Version' $(node --version)
 echo 'Npm Version' $(npm --version)
 echo 'Yarn Version' $(yarn --version)
-echo 'Webpack Version' $(webpack --version)
 echo 'Bower Version' $(bower --version)
 
 echo $(apache2 -v)
