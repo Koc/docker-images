@@ -40,7 +40,8 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
 ENV PHP_VERSION=7.1 \
- PHP_VERSION_FULL=7.1.12
+ PHP_VERSION_FULL=7.1.12 \
+ PHP_AMQP_VERSION=v1.9.3
 ENV PHP_INI_DIR /etc/php/$PHP_VERSION
 
 # Install PHP and extensions
@@ -74,6 +75,13 @@ RUN add-apt-repository ppa:ondrej/php \
     php$PHP_VERSION-mailparse \
     php$PHP_VERSION-xdebug \
  && a2enmod ssl rewrite headers include proxy alias \
+ && git clone --branch ${PHP_AMQP_VERSION} https://github.com/pdezwart/php-amqp.git /tmp/php-amqp \
+  && cd /tmp/php-amqp \
+  && phpize  \
+  && ./configure  \
+  && make  \
+  && make install \
+  && make test \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
 # Install Blackfire
