@@ -39,7 +39,8 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
  && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends yarn \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
-ENV PHP_VERSION 7.0
+ENV PHP_VERSION=7.0 \
+ PHP_VERSION_FULL=7.0.26
 ENV PHP_INI_DIR /etc/php/$PHP_VERSION
 
 # Install PHP and extensions
@@ -53,6 +54,7 @@ RUN add-apt-repository ppa:ondrej/php \
     php$PHP_VERSION-common \
     php$PHP_VERSION-dev \
     php$PHP_VERSION-gd \
+    php$PHP_VERSION-amqp \
     php$PHP_VERSION-imagick \
     php$PHP_VERSION-mysql \
     php$PHP_VERSION-pgsql \

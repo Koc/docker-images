@@ -39,7 +39,8 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
  && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends yarn \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
-ENV PHP_VERSION 7.1
+ENV PHP_VERSION=7.1 \
+ PHP_VERSION_FULL=7.1.12
 ENV PHP_INI_DIR /etc/php/$PHP_VERSION
 
 # Install PHP and extensions
@@ -53,6 +54,7 @@ RUN add-apt-repository ppa:ondrej/php \
     php$PHP_VERSION-common \
     php$PHP_VERSION-dev \
     php$PHP_VERSION-gd \
+    php$PHP_VERSION-amqp \
     php$PHP_VERSION-imagick \
     php$PHP_VERSION-mysql \
     php$PHP_VERSION-pgsql \
@@ -111,8 +113,8 @@ RUN groupadd $CONTAINER_GROUP -g 1000 \
  && echo "$CONTAINER_USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$CONTAINER_USER \
  && chmod 0440 /etc/sudoers.d/$CONTAINER_USER
 
-ENV APACHE_RUN_USER $CONTAINER_USER
-ENV APACHE_RUN_GROUP $CONTAINER_GROUP
+ENV APACHE_RUN_USER=$CONTAINER_USER \
+ APACHE_RUN_GROUP=$CONTAINER_GROUP
 
 RUN mkdir -p /var/www/html && chown $CONTAINER_USER:$CONTAINER_GROUP -R /var/www/html
 
@@ -123,11 +125,13 @@ RUN npm install -g bower
 #RUN yarn global add bower
 
 ENV PASSWORD ""
-ENV COMPOSER_AUTH ""
 
-ENV PHP_CONFIG ""
-ENV PHP_CONFIG_CLI ""
-ENV PHP_CONFIG_WEB ""
+ENV COMPOSER_AUTH="" \
+ GITHUB_OAUTH_TOKEN=""
+
+ENV PHP_CONFIG="" \
+ PHP_CONFIG_CLI="" \
+ PHP_CONFIG_WEB=""
 
 COPY etc/php/* /etc/php/$PHP_VERSION/apache2/conf.d/
 COPY etc/php/* /etc/php/$PHP_VERSION/cli/conf.d/

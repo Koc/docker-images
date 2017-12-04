@@ -73,6 +73,8 @@ export HOME=/home/$USER
 USER=$(whoami)
 sudo chown $USER:$USER -R $HOME/.composer/
 
+#TODO: GITHUB_OAUTH_TOKEN
+
 if [ -n "$COMPOSER_AUTH" ]; then
     #mkdir -p $HOME/.config/composer
 	#echo "$COMPOSER_AUTH" | tee $HOME/.config/composer/auth.json > /dev/null
