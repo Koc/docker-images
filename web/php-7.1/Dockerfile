@@ -57,6 +57,7 @@ RUN add-apt-repository ppa:ondrej/php \
     php$PHP_VERSION-common \
     php$PHP_VERSION-dev \
     php$PHP_VERSION-gd \
+    php$PHP_VERSION-amqp \
     php$PHP_VERSION-imagick \
     php$PHP_VERSION-mysql \
     php$PHP_VERSION-pgsql \
@@ -76,21 +77,10 @@ RUN add-apt-repository ppa:ondrej/php \
     php$PHP_VERSION-mailparse \
     php$PHP_VERSION-xdebug \
  && a2enmod ssl rewrite headers include proxy alias \
- && git clone --branch ${RABBITMQ_VERSION} https://github.com/alanxz/rabbitmq-c.git /tmp/rabbitmq \
-  && cd /tmp/rabbitmq \
-  && mkdir build && cd build \
-  && cmake .. \
-  && cmake --build . --target install \
-  # workaround for linking issue
-  && cp -r /usr/local/lib64/* /usr/lib/ \
- && git clone --branch ${PHP_AMQP_VERSION} https://github.com/pdezwart/php-amqp.git /tmp/php-amqp \
-  && cd /tmp/php-amqp \
-  && phpize  \
-  && ./configure  \
-  && make  \
-  && make install \
-  && make test \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
+
+# Update php-amqp to the 1.9.3 version
+COPY --from=enqueue/dev /usr/lib/php/20160303/amqp.so /usr/lib/php/20160303/amqp.so
 
 # Install Blackfire
 RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
