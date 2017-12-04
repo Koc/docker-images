@@ -100,7 +100,7 @@ RUN curl -sL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar -o /usr/loca
 RUN curl -sL https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar -o /usr/local/bin/phpcbf && chmod +x /usr/local/bin/phpcbf
 
 # Install Composer
-ENV COMPOSER_VERSION 1.5.2
+ENV COMPOSER_VERSION 1.5.5
 RUN curl -sL https://getcomposer.org/download/$COMPOSER_VERSION/composer.phar -o /usr/local/bin/composer && chmod +x /usr/local/bin/composer
 
 # Install PHPUnit
