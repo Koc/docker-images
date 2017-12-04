@@ -41,7 +41,9 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
 
 ENV PHP_VERSION=7.1 \
  PHP_VERSION_FULL=7.1.12 \
- PHP_AMQP_VERSION=v1.9.3
+ PHP_AMQP_VERSION=v1.9.3 \
+ RABBITMQ_VERSION=v0.8.0
+
 ENV PHP_INI_DIR /etc/php/$PHP_VERSION
 
 # Install PHP and extensions
@@ -55,7 +57,6 @@ RUN add-apt-repository ppa:ondrej/php \
     php$PHP_VERSION-common \
     php$PHP_VERSION-dev \
     php$PHP_VERSION-gd \
-    php$PHP_VERSION-amqp \
     php$PHP_VERSION-imagick \
     php$PHP_VERSION-mysql \
     php$PHP_VERSION-pgsql \
@@ -75,6 +76,13 @@ RUN add-apt-repository ppa:ondrej/php \
     php$PHP_VERSION-mailparse \
     php$PHP_VERSION-xdebug \
  && a2enmod ssl rewrite headers include proxy alias \
+ && git clone --branch ${RABBITMQ_VERSION} https://github.com/alanxz/rabbitmq-c.git /tmp/rabbitmq \
+  && cd /tmp/rabbitmq \
+  && mkdir build && cd build \
+  && cmake .. \
+  && cmake --build . --target install \
+  # workaround for linking issue
+  && cp -r /usr/local/lib64/* /usr/lib/ \
  && git clone --branch ${PHP_AMQP_VERSION} https://github.com/pdezwart/php-amqp.git /tmp/php-amqp \
   && cd /tmp/php-amqp \
   && phpize  \
