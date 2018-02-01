@@ -1,3 +1,4 @@
-context:
+variables:
   PHP_VERSION: 5.6
-  PHP_VERSION_FULL: 5.6.32
+  PHP_VERSION_FULL: 5.6.33
+  PHPUNIT_VERSION: 5.7
