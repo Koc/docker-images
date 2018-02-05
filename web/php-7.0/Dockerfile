@@ -98,7 +98,7 @@ ENV COMPOSER_VERSION 1.6.3
 RUN curl -sL https://getcomposer.org/download/$COMPOSER_VERSION/composer.phar -o /usr/local/bin/composer && chmod +x /usr/local/bin/composer
 
 # Install PHPUnit
-ENV PHPUNIT_VERSION 5.7
+ENV PHPUNIT_VERSION 6.5
 RUN curl -sL https://phar.phpunit.de/phpunit-$PHPUNIT_VERSION.phar -o /usr/local/bin/phpunit && chmod +x /usr/local/bin/phpunit
 
 COPY etc/my_init.d/01_start_sshd.sh /etc/my_init.d/01_start_sshd.sh
