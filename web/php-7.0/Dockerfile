@@ -41,7 +41,7 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
 ENV PHP_VERSION=7.0 \
- PHP_VERSION_FULL=7.0.27
+ PHP_VERSION_FULL=7.0.28
 
 ENV PHP_INI_DIR /etc/php/$PHP_VERSION
 
