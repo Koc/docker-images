@@ -41,7 +41,7 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
 ENV PHP_VERSION=7.2 \
- PHP_VERSION_FULL=7.2.3
+ PHP_VERSION_FULL=7.2.4
 
 ENV PHP_INI_DIR /etc/php/$PHP_VERSION
 
@@ -62,6 +62,7 @@ RUN add-apt-repository ppa:ondrej/php \
     php$PHP_VERSION-curl \
     php$PHP_VERSION-intl \
     php$PHP_VERSION-xsl \
+    php$PHP_VERSION-xml \
     php$PHP_VERSION-mbstring \
     php$PHP_VERSION-zip \
     php$PHP_VERSION-bcmath \

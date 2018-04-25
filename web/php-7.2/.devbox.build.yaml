@@ -1,3 +1,3 @@
 variables:
   PHP_VERSION: 7.2
-  PHP_VERSION_FULL: 7.2.3
+  PHP_VERSION_FULL: 7.2.4
