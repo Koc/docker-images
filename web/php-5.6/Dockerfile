@@ -35,6 +35,10 @@ ENV NODEJS_VERSION=8
 RUN curl -sL https://deb.nodesource.com/setup_$NODEJS_VERSION.x | bash - && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends nodejs build-essential \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
+# Install specified version of npm
+ENV NPM_VERSION=6.0.1
+RUN npm install npm@$NPM_VERSION -g
+
 ENV YARN_VERSION=1.6.0
 # Install Yarn
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
@@ -43,7 +47,7 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
 ENV PHP_VERSION=5.6 \
- PHP_VERSION_FULL=5.6.35
+ PHP_VERSION_FULL=5.6.36
 
 ENV PHP_INI_DIR /etc/php/$PHP_VERSION
 
@@ -124,10 +128,6 @@ ENV APACHE_RUN_USER=$CONTAINER_USER \
 RUN mkdir -p /var/www/html && chown $CONTAINER_USER:$CONTAINER_GROUP -R /var/www/html
 
 #USER $CONTAINER_USER
-
-# Install Bower
-RUN npm install -g bower
-#RUN yarn global add bower
 
 ENV PASSWORD ""
 

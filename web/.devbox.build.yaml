@@ -3,6 +3,7 @@ variables:
   COMPOSER_VERSION: 1.6.3
   PHPUNIT_VERSION: 6.5
   NODEJS_VERSION: 8
+  NPM_VERSION: 6.0.1
   YARN_VERSION: 1.6.0
 builds:
   - php-5.6
