@@ -36,7 +36,7 @@ RUN curl -sL https://deb.nodesource.com/setup_$NODEJS_VERSION.x | bash - && DEBI
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
 # Install specified version of npm
-ENV NPM_VERSION=6.0.1
+ENV NPM_VERSION=5.6
 RUN npm install npm@$NPM_VERSION -g
 
 ENV YARN_VERSION=1.6.0
