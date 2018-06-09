@@ -65,6 +65,7 @@ RUN add-apt-repository ppa:ondrej/php \
     php$PHP_VERSION-imagick \
     php$PHP_VERSION-mysql \
     php$PHP_VERSION-pgsql \
+    php$PHP_VERSION-sqlite \
     php$PHP_VERSION-mcrypt \
     php$PHP_VERSION-curl \
     php$PHP_VERSION-intl \

@@ -47,7 +47,7 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
 ENV PHP_VERSION=7.2 \
- PHP_VERSION_FULL=7.2.5
+ PHP_VERSION_FULL=7.2.6
 
 ENV PHP_INI_DIR /etc/php/$PHP_VERSION
 
@@ -65,6 +65,7 @@ RUN add-apt-repository ppa:ondrej/php \
     php$PHP_VERSION-imagick \
     php$PHP_VERSION-mysql \
     php$PHP_VERSION-pgsql \
+    php$PHP_VERSION-sqlite \
     php$PHP_VERSION-curl \
     php$PHP_VERSION-intl \
     php$PHP_VERSION-xsl \
