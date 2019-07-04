@@ -85,7 +85,7 @@ RUN add-apt-repository ppa:ondrej/php \
     php$PHP_VERSION-mailparse \
     php$PHP_VERSION-xdebug \
     php$PHP_VERSION-amqp \
- && a2enmod ssl rewrite headers include proxy alias \
+ && a2enmod ssl rewrite headers include proxy proxy_http alias \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
 # Install Blackfire

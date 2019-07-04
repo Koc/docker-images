@@ -39,7 +39,7 @@ RUN curl -sL https://deb.nodesource.com/setup_$NODEJS_VERSION.x | bash - && DEBI
 ENV NPM_VERSION=5.6
 RUN npm install npm@$NPM_VERSION -g
 
-ENV YARN_VERSION=1.6.0
+ENV YARN_VERSION=1.16.0
 # Install Yarn
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
  && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
@@ -83,7 +83,7 @@ RUN add-apt-repository ppa:ondrej/php \
     php$PHP_VERSION-mailparse \
     php$PHP_VERSION-xdebug \
     php$PHP_VERSION-amqp \
- && a2enmod ssl rewrite headers include proxy alias \
+ && a2enmod ssl rewrite headers include proxy proxy_http alias \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
 # Install Blackfire
@@ -102,7 +102,7 @@ RUN curl -sL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar -o /usr/loca
 RUN curl -sL https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar -o /usr/local/bin/phpcbf && chmod +x /usr/local/bin/phpcbf
 
 # Install Composer
-ENV COMPOSER_VERSION 1.6.3
+ENV COMPOSER_VERSION 1.8.6
 RUN curl -sL https://getcomposer.org/download/$COMPOSER_VERSION/composer.phar -o /usr/local/bin/composer && chmod +x /usr/local/bin/composer
 
 # Install PHPUnit
