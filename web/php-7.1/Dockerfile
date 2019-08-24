@@ -30,16 +30,16 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     vim \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
-ENV NODEJS_VERSION=8
+ENV NODEJS_VERSION=10
 # Install NodeJS
 RUN curl -sL https://deb.nodesource.com/setup_$NODEJS_VERSION.x | bash - && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends nodejs build-essential \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
 # Install specified version of npm
-ENV NPM_VERSION=5.6
+ENV NPM_VERSION=latest
 RUN npm install npm@$NPM_VERSION -g
 
-ENV YARN_VERSION=1.16.0
+ENV YARN_VERSION=1.17.0
 # Install Yarn
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
  && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
@@ -47,7 +47,7 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
 ENV PHP_VERSION=7.1 \
- PHP_VERSION_FULL=7.1.18
+ PHP_VERSION_FULL=7.1.31
 
 ENV PHP_INI_DIR /etc/php/$PHP_VERSION
 
