@@ -30,7 +30,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     vim \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
-ENV NODEJS_VERSION=10
+ENV NODEJS_VERSION=12
 # Install NodeJS
 RUN curl -sL https://deb.nodesource.com/setup_$NODEJS_VERSION.x | bash - && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends nodejs build-essential \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
@@ -39,7 +39,7 @@ RUN curl -sL https://deb.nodesource.com/setup_$NODEJS_VERSION.x | bash - && DEBI
 ENV NPM_VERSION=latest
 RUN npm install npm@$NPM_VERSION -g
 
-ENV YARN_VERSION=1.17.0
+ENV YARN_VERSION=1.22.5
 # Install Yarn
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
  && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
