@@ -30,7 +30,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     vim \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
-ENV NODEJS_VERSION=12
+ENV NODEJS_VERSION=14
 # Install NodeJS
 RUN curl -sL https://deb.nodesource.com/setup_$NODEJS_VERSION.x | bash - && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends nodejs build-essential \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
@@ -39,7 +39,7 @@ RUN curl -sL https://deb.nodesource.com/setup_$NODEJS_VERSION.x | bash - && DEBI
 ENV NPM_VERSION=latest
 RUN npm install npm@$NPM_VERSION -g
 
-ENV YARN_VERSION=1.22.5
+ENV YARN_VERSION=1.22.18
 # Install Yarn
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
  && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
@@ -47,7 +47,7 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
 ENV PHP_VERSION=7.2 \
- PHP_VERSION_FULL=7.2.21
+ PHP_VERSION_FULL=7.2.34
 
 ENV PHP_INI_DIR /etc/php/$PHP_VERSION
 
@@ -101,7 +101,7 @@ RUN curl -sL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar -o /usr/loca
 RUN curl -sL https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar -o /usr/local/bin/phpcbf && chmod +x /usr/local/bin/phpcbf
 
 # Install Composer
-ENV COMPOSER_VERSION 1.8.6
+ENV COMPOSER_VERSION 1.10.25
 RUN curl -sL https://getcomposer.org/download/$COMPOSER_VERSION/composer.phar -o /usr/local/bin/composer && chmod +x /usr/local/bin/composer
 
 # Install PHPUnit
